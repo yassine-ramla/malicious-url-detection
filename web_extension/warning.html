@@ -1,0 +1,38 @@
+<!-- warning.html -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warning</title>
+    <link rel="stylesheet" href="styles/warning.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="warning-card">
+        <h1>⚠️ Suspicious URL Detected</h1>
+        <p id="url-display"></p>
+        <p id="score-display"></p>
+
+        <div id="features-table-wrapper">
+          <h2>Extracted Features</h2>
+          <table id="features-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div id="actions">
+          <button id="btn-back">Go Back</button>
+          <button id="btn-continue">Continue Anyway</button>
+        </div>
+      </div>
+    </div>
+    <script src="scripts/warning.js" type="module"></script>
+  </body>
+</html>
