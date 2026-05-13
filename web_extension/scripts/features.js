@@ -19,12 +19,6 @@ function normalizeUrl(url) {
   return url;
 }
 
-function toFloat16(value) {
-  const arr = new Float16Array(1);
-  arr[0] = value;
-  return arr[0];
-}
-
 function alphaDigitTransitions(s) {
   let count = 0;
   for (let i = 0; i < s.length - 1; i++) {
@@ -238,7 +232,7 @@ export default async function extractFeatures(rawUrl) {
 
   // entropy
   for (const [key, val] of Object.entries(parts)) {
-    features[`${key}_entropy`] = toFloat16(shannonEntropy(val));
+    features[`${key}_entropy`] = shannonEntropy(val);
   }
 
   // path pollution

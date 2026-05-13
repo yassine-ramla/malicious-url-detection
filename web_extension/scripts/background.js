@@ -8,6 +8,8 @@ const IGNORED_SCHEMES = [
   "devtools://",
 ];
 
+const IGNORED_PREFIXES = ["https://www.google.com/search?"];
+
 async function ensureOffscreenDocument() {
   const existing = await chrome.runtime.getContexts({
     contextTypes: ["OFFSCREEN_DOCUMENT"],
@@ -26,6 +28,7 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
 
   const url = details.url;
   if (IGNORED_SCHEMES.some((scheme) => url.startsWith(scheme))) return;
+  if (IGNORED_PREFIXES.some((prefix) => url.startsWith(prefix))) return;
 
   chrome.storage.session.get("continuing", async (result) => {
     if (result.continuing) {
