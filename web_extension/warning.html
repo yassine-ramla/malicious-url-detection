@@ -1,36 +1,57 @@
-<!-- warning.html -->
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Warning</title>
+    <title>Security Warning</title>
     <link rel="stylesheet" href="styles/warning.css" />
   </head>
   <body>
     <div id="app">
-      <div id="warning-card">
-        <h1>⚠️ Suspicious URL Detected</h1>
-        <p id="url-display"></p>
-        <p id="score-display"></p>
+      <div id="icon-wrapper">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-shield-alert-icon lucide-shield-alert">
+          <path
+            d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+          <path d="M12 8v4" />
+          <path d="M12 16h.01" />
+        </svg>
+      </div>
 
-        <div id="features-table-wrapper">
-          <h2>Extracted Features</h2>
-          <table id="features-table">
-            <thead>
-              <tr>
-                <th>Feature</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
+      <h1 id="warning-title"></h1>
 
-        <div id="actions">
-          <button id="btn-back">Go Back</button>
-          <button id="btn-continue">Continue Anyway</button>
+      <div id="score-row">
+        <span id="score-display"></span>
+        <span id="risk-badge"></span>
+      </div>
+
+      <p id="warning-description">
+        The Malicious URL Detection extension has flagged this site based on
+        suspicious URL patterns detected by our local model. Your personal
+        information, passwords, and data may be at risk.
+      </p>
+
+      <div id="url-display"></div>
+
+      <div id="actions">
+        <div id="actions-left">
+          <button id="btn-whitelist" class="btn-text">
+            Whitelist this site
+          </button>
+          <button id="btn-continue" class="btn-text">
+            I understand the risks, proceed
+          </button>
         </div>
+        <button id="btn-back" class="btn-pill">Return to Safety</button>
       </div>
     </div>
     <script src="scripts/warning.js" type="module"></script>

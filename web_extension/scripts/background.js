@@ -23,10 +23,21 @@ async function ensureOffscreenDocument() {
   }
 }
 
+async function incrementStat(key) {
+  return new Promise((resolve) => {
+    chrome.storage.local.get("stats", (result) => {
+      const stats = result.stats || { scanned: 0, flagged: 0, whitelisted: 0 };
+      stats[key] = (stats[key] || 0) + 1;
+      chrome.storage.local.set({ stats }, resolve);
+    });
+  });
+}
+
 chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
   if (details.frameId !== 0) return;
 
   const url = details.url;
+
   if (IGNORED_SCHEMES.some((scheme) => url.startsWith(scheme))) return;
   if (IGNORED_PREFIXES.some((prefix) => url.startsWith(prefix))) return;
 
@@ -36,23 +47,38 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
       return;
     }
 
-    const features = await extractFeatures(url);
-    if (!features) return;
+    // check whitelist
+    chrome.storage.local.get("whitelist", async (result) => {
+      const whitelist = result.whitelist || [];
+      let hostname;
+      try {
+        hostname = new URL(url).hostname;
+      } catch {
+        return;
+      }
 
-    await ensureOffscreenDocument();
+      if (whitelist.includes(hostname)) return;
 
-    chrome.runtime.sendMessage({ type: "PREDICT", features }, (response) => {
-      if (!response || response.score === undefined) return;
-      if (response.score < 0) return;
+      await incrementStat("scanned");
 
-      chrome.storage.session.set(
-        { pendingWarning: { url, features, score: response.score } },
-        () => {
-          chrome.tabs.update(details.tabId, {
-            url: chrome.runtime.getURL("warning.html"),
-          });
-        },
-      );
+      const features = await extractFeatures(url);
+      if (!features) return;
+
+      await ensureOffscreenDocument();
+
+      chrome.runtime.sendMessage({ type: "PREDICT", features }, (response) => {
+        if (!response || response.score === undefined) return;
+        if (response.score < 0.45) return;
+
+        chrome.storage.session.set(
+          { pendingWarning: { url, features, score: response.score } },
+          () => {
+            chrome.tabs.update(details.tabId, {
+              url: chrome.runtime.getURL("warning.html"),
+            });
+          },
+        );
+      });
     });
   });
 });

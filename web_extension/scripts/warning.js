@@ -1,23 +1,56 @@
+// scripts/warning.js
 chrome.storage.session.get("pendingWarning", (result) => {
   const data = result.pendingWarning;
   if (!data) return;
 
-  const { url, features, score } = data;
+  const { url, score } = data;
+  const hostname = new URL(url).hostname;
+  const isHighRisk = score >= 0.75;
 
-  document.getElementById("url-display").textContent = `URL: ${url}`;
+  document.body.classList.add(isHighRisk ? "state-danger" : "state-warning");
+
+  document.getElementById("warning-title").textContent = isHighRisk
+    ? "Dangerous site detected."
+    : "Suspicious site detected.";
+
   document.getElementById("score-display").textContent =
-    `Risk score: ${score.toFixed(3)}`;
+    `${Math.min(Math.round(score * 100), 98)}% Danger Score`;
 
-  const tbody = document.querySelector("#features-table tbody");
-  for (const [key, value] of Object.entries(features)) {
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${key}</td><td>${value}</td>`;
-    tbody.appendChild(row);
-  }
+  document.getElementById("risk-badge").textContent = isHighRisk
+    ? "Critical Risk"
+    : "Moderate Risk";
+
+  document.getElementById("url-display").textContent = url;
+
+  // increment flagged stat
+  chrome.storage.local.get("stats", (result) => {
+    const stats = result.stats || { scanned: 0, flagged: 0, whitelisted: 0 };
+    stats.flagged = (stats.flagged || 0) + 1;
+    chrome.storage.local.set({ stats });
+  });
 
   document.getElementById("btn-back").addEventListener("click", () => {
     chrome.storage.session.remove("pendingWarning");
     history.back();
+  });
+
+  document.getElementById("btn-whitelist").addEventListener("click", () => {
+    chrome.storage.local.get(["whitelist", "stats"], (result) => {
+      const whitelist = result.whitelist || [];
+      const stats = result.stats || { scanned: 0, flagged: 0, whitelisted: 0 };
+
+      if (!whitelist.includes(hostname)) {
+        whitelist.push(hostname);
+        stats.whitelisted = (stats.whitelisted || 0) + 1;
+      }
+
+      chrome.storage.local.set({ whitelist, stats }, () => {
+        chrome.storage.session.set({ continuing: true }, () => {
+          chrome.storage.session.remove("pendingWarning");
+          window.location.href = url;
+        });
+      });
+    });
   });
 
   document.getElementById("btn-continue").addEventListener("click", () => {
