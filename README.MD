@@ -80,7 +80,70 @@ Multiple threat intelligence sources including:
 
 ### Web Extension
 
-- `web_extension/`: Browser extension component for real-time URL scanning
+The project includes a Chrome web extension that integrates the malicious URL detection model directly into the browser for real-time URL scanning and protection.
+
+#### Features
+
+**URL Detection & Analysis**
+
+- Automatically captures URLs entered by the user during browsing
+- Passes URLs through the trained ML model in real-time
+- Generates danger scores based on URL characteristics
+
+**Smart Warnings System**
+
+- **Warning Page** (45%-75% danger score): Displayed for potentially risky URLs with moderate threat levels
+  - ![Warning Page Example](web_extension/images/warning-window.jpg)
+
+- **Danger Page** (>75% danger score): Displayed for highly suspicious URLs with severe threat levels
+  - ![Danger Page Example](web_extension/images/danger-window.jpg)
+
+- Both pages show the calculated danger score for transparency
+
+**User Control Options**
+Each warning/danger page provides three actions:
+
+1. **Go Back**: Abandon navigation and return to the previous page
+2. **Continue Anyway**: Proceed to the URL at your own risk
+3. **Whitelist & Continue**: Add the URL's hostname to the whitelist and proceed (future visits to this hostname will bypass checks)
+
+**Extension Popup Interface**
+The extension popup displays:
+
+- Detection statistics and metrics
+- List of currently whitelisted hostnames
+- Options to remove individual hostnames from whitelist
+- Option to clear the entire whitelist
+
+- ![Extension Popup Interface](web_extension/images/extension-popup.jpg)
+
+#### Installation
+
+##### Prerequisites
+
+- Chrome/Chromium browser
+
+##### Loading the Extension Manually
+
+1. **Open Chrome Extensions Page**
+   - Navigate to `chrome://extensions/` in your Chrome address bar
+
+2. **Enable Developer Mode**
+   - Toggle the "Developer mode" switch in the top right corner
+
+3. **Load Unpacked Extension**
+   - Click the "Load unpacked" button that appears after enabling Developer mode
+   - Navigate to the `web_extension/` folder in this project
+   - Select and open the folder (it will automatically load the extension)
+
+4. **Verify Installation**
+   - The extension icon should appear in your Chrome toolbar
+   - You may need to pin the extension for easy access (click the pin icon next to it)
+
+5. **Start Using**
+   - Begin browsing normally
+   - When you navigate to a URL, the extension will analyze it
+   - Warning or danger pages will appear automatically for suspicious URLs
 
 ## Important Note: Compressed Files
 
