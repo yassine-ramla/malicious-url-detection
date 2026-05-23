@@ -3,9 +3,9 @@ chrome.storage.session.get("pendingWarning", (result) => {
   const data = result.pendingWarning;
   if (!data) return;
 
-  const { url, score } = data;
-  const hostname = new URL(url).hostname;
-  const isHighRisk = score >= 0.75;
+  const { url, score, thresholds } = data;
+  const dangerThreshold = (thresholds?.danger ?? 75) / 100;
+  const isHighRisk = score >= dangerThreshold;
 
   document.body.classList.add(isHighRisk ? "state-danger" : "state-warning");
 

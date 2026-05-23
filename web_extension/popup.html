@@ -10,10 +10,71 @@
     <div id="app">
       <div id="header">
         <div id="header-left">
-          <img src="images/icon-48.png" alt="">
+          <img src="images/icon-48.png" alt="" />
           <div id="header-text">
             <span id="app-name">Malicious URL Detection</span>
-            <span id="app-subtitle">V1.0.0 · PROTECTED</span>
+            <span id="app-subtitle">V1.1.0 · PROTECTED</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="settings">
+        <div class="setting-row">
+          <div class="setting-label">
+            Warning Threshold
+            <span
+              title="The danger score over which a site is flagged as suspicious">
+              <svg
+                title="The danger score over which a site is flagged as suspicious"
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-circle-alert-icon lucide-circle-alert">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" x2="12" y1="8" y2="12" />
+                <line x1="12" x2="12.01" y1="16" y2="16" />
+              </svg>
+            </span>
+          </div>
+          <div class="setting-control">
+            <button class="btn-threshold" id="warning-dec">−</button>
+            <span class="setting-value" id="warning-value">45%</span>
+            <button class="btn-threshold" id="warning-inc">+</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">
+            Danger Threshold
+            <span
+              title="The danger score over which a site is flagged as danger">
+              <svg
+                title="The danger score over which a site is flagged as suspicious"
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-circle-alert-icon lucide-circle-alert">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" x2="12" y1="8" y2="12" />
+                <line x1="12" x2="12.01" y1="16" y2="16" />
+              </svg>
+            </span>
+          </div>
+          <div class="setting-control">
+            <button class="btn-threshold" id="danger-dec">−</button>
+            <span class="setting-value" id="danger-value">75%</span>
+            <button class="btn-threshold" id="danger-inc">+</button>
           </div>
         </div>
       </div>
@@ -28,7 +89,7 @@
           <span class="stat-value threat" id="stat-flagged">0</span>
         </div>
         <div class="stat-card">
-          <span class="stat-label">Whitelist</span>
+          <span class="stat-label">Whitelisted</span>
           <span class="stat-value" id="stat-whitelisted">0</span>
         </div>
       </div>

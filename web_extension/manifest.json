@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Malicious URL Detection",
   "description": "This extension sees the URLs you enter and warn you in case you tried to enter a URL that looks malicious",
-  "version": "1.0",
+  "version": "1.1",
   "icons": {
     "16": "images/icon-16.png",
     "32": "images/icon-32.png",

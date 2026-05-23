@@ -11,7 +11,7 @@ body {
   background-color: #0e0e0e;
   color: #e2e8f0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  width: 280px;
+  min-width: 300px;
   min-height: 200px;
   max-height: 560px;
   display: flex;
@@ -23,6 +23,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-width: 300px;
   max-height: 560px;
   overflow: hidden;
 }
@@ -78,6 +79,7 @@ body {
   padding: 20px;
   gap: 0;
   flex-shrink: 0;
+  border-bottom: 1px solid #2a2a2e;
 }
 
 .stat-card {
@@ -228,4 +230,77 @@ body {
 #btn-clear-all svg {
   width: 14px;
   height: 14px;
+}
+
+#settings {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-bottom: 1px solid #2a2a2e;
+  padding: 12px 18px;
+  flex-shrink: 0;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.setting-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #555560;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.setting-label>span:hover {
+  cursor: pointer;
+}
+
+.setting-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.setting-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f1f5f9;
+  width: 36px;
+  text-align: center;
+}
+
+.btn-threshold {
+  background: none;
+  border: 1px solid #2a2a2e;
+  color: #94a3b8;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btn-threshold:hover {
+  border-color: #94a3b8;
+  color: #f1f5f9;
+}
+
+.btn-threshold:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #2a2a2e;
+  color: #555560;
 }

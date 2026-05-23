@@ -92,13 +92,14 @@ The project includes a Chrome web extension that integrates the malicious URL de
 
 **Smart Warnings System**
 
-- **Warning Page** (45%-75% danger score): Displayed for potentially risky URLs with moderate threat levels
+- **Warning Page** (customizable threshold): Displayed for potentially risky URLs with moderate threat levels
   - ![Warning Page Example](web_extension/images/warning-window.jpg)
 
-- **Danger Page** (>75% danger score): Displayed for highly suspicious URLs with severe threat levels
+- **Danger Page** (customizable threshold): Displayed for highly suspicious URLs with severe threat levels
   - ![Danger Page Example](web_extension/images/danger-window.jpg)
 
 - Both pages show the calculated danger score for transparency
+- Threshold values are user-configurable and can be adjusted at any time
 
 **User Control Options**
 Each warning/danger page provides three actions:
@@ -114,6 +115,7 @@ The extension popup displays:
 - List of currently whitelisted hostnames
 - Options to remove individual hostnames from whitelist
 - Option to clear the entire whitelist
+- **Threshold Settings**: Customizable warning and danger thresholds for fine-tuning alert sensitivity
 
 - ![Extension Popup Interface](web_extension/images/extension-popup.jpg)
 

@@ -1,4 +1,61 @@
 // scripts/popup.js
+const STEP = 5;
+const DEFAULT_WARNING = 45;
+const DEFAULT_DANGER = 75;
+
+let warningThreshold = DEFAULT_WARNING;
+let dangerThreshold = DEFAULT_DANGER;
+
+function updateThresholdUI() {
+  document.getElementById("warning-value").textContent = `${warningThreshold}%`;
+  document.getElementById("danger-value").textContent = `${dangerThreshold}%`;
+
+  document.getElementById("warning-dec").disabled = warningThreshold <= 5;
+  document.getElementById("warning-inc").disabled =
+    warningThreshold >= dangerThreshold - STEP;
+  document.getElementById("danger-dec").disabled =
+    dangerThreshold <= warningThreshold + STEP;
+  document.getElementById("danger-inc").disabled = dangerThreshold >= 95;
+}
+
+function saveThresholds() {
+  chrome.storage.local.set({
+    thresholds: { warning: warningThreshold, danger: dangerThreshold },
+  });
+}
+
+document.getElementById("warning-dec").addEventListener("click", () => {
+  if (warningThreshold - STEP >= 5) {
+    warningThreshold -= STEP;
+    updateThresholdUI();
+    saveThresholds();
+  }
+});
+
+document.getElementById("warning-inc").addEventListener("click", () => {
+  if (warningThreshold + STEP < dangerThreshold) {
+    warningThreshold += STEP;
+    updateThresholdUI();
+    saveThresholds();
+  }
+});
+
+document.getElementById("danger-dec").addEventListener("click", () => {
+  if (dangerThreshold - STEP > warningThreshold) {
+    dangerThreshold -= STEP;
+    updateThresholdUI();
+    saveThresholds();
+  }
+});
+
+document.getElementById("danger-inc").addEventListener("click", () => {
+  if (dangerThreshold + STEP <= 95) {
+    dangerThreshold += STEP;
+    updateThresholdUI();
+    saveThresholds();
+  }
+});
+
 function renderWhitelist(whitelist) {
   const list = document.getElementById("whitelist-list");
   const empty = document.getElementById("whitelist-empty");
@@ -17,12 +74,7 @@ function renderWhitelist(whitelist) {
     li.className = "whitelist-item";
     li.innerHTML = `
       <span class="whitelist-hostname">${hostname}</span>
-      <button class="btn-remove" data-hostname="${hostname}" title="Remove">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
+      <button class="btn-remove" data-hostname="${hostname}">×</button>
     `;
     list.appendChild(li);
   }
@@ -34,33 +86,37 @@ function renderWhitelist(whitelist) {
         const updated = (result.whitelist || []).filter((h) => h !== hostname);
         chrome.storage.local.set({ whitelist: updated }, () => {
           renderWhitelist(updated);
-          updateWhitelistStat(updated.length);
+          document.getElementById("stat-whitelisted").textContent =
+            updated.length;
         });
       });
     });
   });
 }
 
-function updateWhitelistStat(count) {
-  document.getElementById("stat-whitelisted").textContent = count;
-}
-
 // initial load
-chrome.storage.local.get(["stats", "whitelist"], (result) => {
+chrome.storage.local.get(["stats", "whitelist", "thresholds"], (result) => {
   const stats = result.stats || { scanned: 0, flagged: 0, whitelisted: 0 };
   const whitelist = result.whitelist || [];
+  const thresholds = result.thresholds || {
+    warning: DEFAULT_WARNING,
+    danger: DEFAULT_DANGER,
+  };
+
+  warningThreshold = thresholds.warning;
+  dangerThreshold = thresholds.danger;
 
   document.getElementById("stat-scanned").textContent = stats.scanned;
   document.getElementById("stat-flagged").textContent = stats.flagged;
   document.getElementById("stat-whitelisted").textContent = whitelist.length;
 
+  updateThresholdUI();
   renderWhitelist(whitelist);
 });
 
-// clear all
 document.getElementById("btn-clear-all").addEventListener("click", () => {
   chrome.storage.local.set({ whitelist: [] }, () => {
     renderWhitelist([]);
-    updateWhitelistStat(0);
+    document.getElementById("stat-whitelisted").textContent = 0;
   });
 });

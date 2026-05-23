@@ -48,8 +48,11 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
     }
 
     // check whitelist
-    chrome.storage.local.get("whitelist", async (result) => {
+    chrome.storage.local.get(["whitelist", "thresholds"], async (result) => {
       const whitelist = result.whitelist || [];
+      const thresholds = result.thresholds || { warning: 45, danger: 75 };
+      const warningThreshold = thresholds.warning / 100;
+
       let hostname;
       try {
         hostname = new URL(url).hostname;
@@ -68,10 +71,17 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
 
       chrome.runtime.sendMessage({ type: "PREDICT", features }, (response) => {
         if (!response || response.score === undefined) return;
-        if (response.score < 0.45) return;
+        if (response.score < warningThreshold) return;
 
         chrome.storage.session.set(
-          { pendingWarning: { url, features, score: response.score } },
+          {
+            pendingWarning: {
+              url,
+              features,
+              score: response.score,
+              thresholds,
+            },
+          },
           () => {
             chrome.tabs.update(details.tabId, {
               url: chrome.runtime.getURL("warning.html"),
